@@ -37,7 +37,9 @@ def handle_dialog(res, req):
             key = 'trnsl.1.1.20200328T113348Z.1e31218feeb49d12.62b5b05ee18f7ce91d5b00489d99c308787e889e'
             t = req["request"]["original_utterance"].split(': ')[-1]
             text = f'https://translate.yandex.net/api/v1.5/tr.json/translate?key={key}&text={t}'
-            res["response"]["text"] = text
+            res["response"]["text"] = requests.get(text)["text"][0]
+        else:
+            res["response"]["text"] = "Немного не поняла Вас, проверьте корректность запроса."
 
 
 if __name__ == '__main__':
