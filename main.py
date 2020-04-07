@@ -75,7 +75,7 @@ def handle_dialog(res, req):
                 res['response']['text'] = 'Ну и ладно!'
                 res["response"]['end_session'] = True
             elif "Покажи город на карте" in req["request"]["original_utterance"]:
-                pass
+                res["response"]["text"] = 'Секундочку'
             else:
                 res['response']['text'] = 'Не поняла ответа! Так да или нет?'
                 res['response']['buttons'] = [
