@@ -10,9 +10,9 @@ app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
 
 cities = {
-    'москва': ['1652229/95f2c0c1d8246c9cc037', '937455/8cdff1b19264b443dfe1'],
-    'нью-йорк': ['997614/27f3dd9d0badb21ad64e', '965417/8ad907920337a8aeeb3b'],
-    'париж': ['213044/fbcf3d1459a4e13c10d7', '965417/1946dc730f9b8b1be889']
+    'москва': ['1652229/95f2c0c1d8246c9cc037', '937455/8cdff1b19264b443dfe1', 'россия'],
+    'нью-йорк': ['997614/27f3dd9d0badb21ad64e', '965417/8ad907920337a8aeeb3b', 'америка'],
+    'париж': ['213044/fbcf3d1459a4e13c10d7', '965417/1946dc730f9b8b1be889', 'франция']
 }
 
 sessionStorage = {}
@@ -118,12 +118,15 @@ def play_game(res, req):
     else:
         city = sessionStorage[user_id]['city']
         if get_city(req) == city:
-            res['response']['text'] = 'Правильно! Сыграем ещё?'
+            res['response']['text'] = 'Правильно! А в какой стране этот город?'
             sessionStorage[user_id]['guessed_cities'].append(city)
+            res["response"]["buttons"] = [{'title': "Покажи город на карте", "url": f'https://yandex.ru/maps/?mode=search&text={city}', "hide": True}]
+            return
+        elif get_country(req) == cities[city][-1]:
+            res['response']['text'] = 'Правильно! Сыграем ещё?'
             sessionStorage[user_id]['game_started'] = False
             res["response"]["buttons"] = [{'title': "Покажи город на карте", "url": f'https://yandex.ru/maps/?mode=search&text={city}', "hide": True},
                                           {'title': 'Да', "hide": True}, {'title': "Нет", "hide": True}]
-            return
         else:
             if attempt == 3:
                 res['response']['text'] = f'Вы пытались. Это {city.title()}. Сыграем ещё?'
@@ -143,6 +146,11 @@ def get_city(req):
     for entity in req['request']['nlu']['entities']:
         if entity['type'] == 'YANDEX.GEO':
             return entity['value'].get('city', None)
+
+def get_country(req):
+    for entity in req['request']['nlu']['entities']:
+        if entity['type'] == 'YANDEX.GEO':
+            return entity['value'].get('country', None)
 
 
 def get_first_name(req):
