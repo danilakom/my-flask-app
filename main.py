@@ -109,7 +109,7 @@ def play_game(res, req):
             res['response']['text'] = 'Правильно! Сыграем ещё?'
             sessionStorage[user_id]['guessed_cities'].append(city)
             sessionStorage[user_id]['game_started'] = False
-            res["response"]["buttons"] = [{'title': "Покажи город на карте", "url": f'(https://yandex.ru/maps/?mode=search&text={city}', "hide": True},
+            res["response"]["buttons"] = [{'title': "Покажи город на карте", "url": f'https://yandex.ru/maps/?mode=search&text={city}', "hide": True},
                                           {'title': 'Да', "hide": True}, {'title': "Нет", "hide": True}]
             return
         else:
